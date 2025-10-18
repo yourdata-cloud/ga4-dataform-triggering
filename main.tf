@@ -26,6 +26,8 @@ resource "google_project_service" "apis" {
     "cloudresourcemanager.googleapis.com",
     "iamcredentials.googleapis.com",
     "cloudfunctions.googleapis.com",
+    "artifactregistry.googleapis.com", 
+    "eventarc.googleapis.com",
     "run.googleapis.com",
     "pubsub.googleapis.com",
     "logging.googleapis.com",
