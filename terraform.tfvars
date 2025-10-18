@@ -2,7 +2,7 @@
 # project_id = "<your-project-id>"
 
 # Resources region:
-# region = "<desidered-resources-region>"
+# region = "<desired-resources-region>"
 
 # GA4 property id (sink filter):
 # log_filter_string = "<your-GA4-property-id>"
