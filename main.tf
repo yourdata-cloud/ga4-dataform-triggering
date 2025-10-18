@@ -124,7 +124,7 @@ resource "google_cloudfunctions2_function" "default" {
   service_config {
     max_instance_count  = 100
     min_instance_count = 0
-    available_memory    = "521Mb"
+    available_memory    = "512M"
     timeout_seconds     = 540
     max_instance_request_concurrency = 1
     available_cpu = "333m"
