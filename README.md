@@ -1,6 +1,6 @@
 # GA4 Dataform Triggering
 
-This project provides a complete Terraform configuration to deploy an event-driven logging pipeline on Google Cloud, based on the GA4 raw data export to BigQuery, and aimed to run your Dataform worflow involved with that.
+This project provides a complete **Terraform** configuration to deploy an event-driven logging pipeline on Google Cloud, based on the GA4 raw data export to BigQuery, and aimed to run your Dataform worflow involved with that.
 
 It automatically deploys a **Node.js (v22) Cloud Run Function (v2)** that is triggered by a **Pub/Sub** topic. This topic is, in turn, fed by a **Logging Sink** that filters your project's logs based on the GA4 export. You'll need to specify your GA4 property ID as a Terraform variable at the application stage (terrafom apply).
 
@@ -40,29 +40,32 @@ cd <ga4-dataform-triggering
 
 ### Initialize Terraform
 
-```terraform init
+```
+terraform init
 ```
 
 ### Apply Terraform with your variables
 
-```terraform apply \
-     -var="project_id=<your-project-id>"
-     -var="region=<where-all-the-resources-will-be-created>"
-     -var="log_filter_string=<your-GA4-property-id>"
-     -var="env_var_2=<your-dataform-repository-region"
-     -var="env_var_3=<your-dataform-repository>"
-     -var="env_var_4=<your-dataform-workspace>"
+```
+terraform apply \
+   -var="project_id=<your-project-id>"
+   -var="region=<where-all-the-resources-will-be-created>"
+   -var="log_filter_string=<your-GA4-property-id>"
+   -var="env_var_2=<your-dataform-repository-region"
+   -var="env_var_3=<your-dataform-repository>"
+   -var="env_var_4=<your-dataform-workspace>"
 ```
 
 If you want to destroy all the resources deployed, just run (you need to reset the same variables):
 
-```terraform destroy \
-     -var="project_id=<your-project-id>"
-     -var="region=<where-all-the-resources-will-be-created>"
-     -var="log_filter_string=<your-GA4-property-id>"
-     -var="env_var_2=<your-dataform-repository-region"
-     -var="env_var_3=<your-dataform-repository>"
-     -var="env_var_4=<your-dataform-workspace>"
+```
+terraform destroy \
+   -var="project_id=<your-project-id>"
+   -var="region=<where-all-the-resources-will-be-created>"
+   -var="log_filter_string=<your-GA4-property-id>"
+   -var="env_var_2=<your-dataform-repository-region"
+   -var="env_var_3=<your-dataform-repository>"
+   -var="env_var_4=<your-dataform-workspace>"
 ```
 
 Alternatively, you can hardcode your variables values into the **terraform.tfvars file**, included in the project (but commented).
