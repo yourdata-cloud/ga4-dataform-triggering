@@ -97,8 +97,8 @@ resource "google_pubsub_topic_iam_member" "logging_publisher" {
 
 # Cloud Run service account definition:
 resource "google_service_account" "run_runtime_sa" {
-  account_id   = "run-log-handler-sa-${random_id.sa_suffix.hex}"
-  display_name = "Runtime SA for Log Handler"
+  account_id   = "ga4-dataform-run-sa-${random_id.sa_suffix.hex}"
+  display_name = "GA4 Dataform Run SA"
 }
 
 # Cloud Run Function (v2):
