@@ -16,6 +16,10 @@ provider "google" {
   region  = var.region
 }
 
+resource "random_id" "sa_suffix" {
+  byte_length = 4
+}
+
 # Enable required services API:
 resource "google_project_service" "apis" {
   for_each = toset([
@@ -91,7 +95,7 @@ resource "google_pubsub_topic_iam_member" "logging_publisher" {
 
 # Cloud Run service account definition:
 resource "google_service_account" "run_runtime_sa" {
-  account_id   = "run-log-handler-sa"
+  account_id   = "run-log-handler-sa-${random_id.sa_suffix.hex}"
   display_name = "Runtime SA for Log Handler"
 }
 
@@ -126,11 +130,11 @@ resource "google_cloudfunctions2_function" "default" {
     available_cpu = "333m"
     environment_variables = {
         SERVICE_CONFIG_TEST      = "config_test"
-        SERVICE_CONFIG_DIFF_TEST = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
+        SERVICE_CONFIG_DIFF_TEST = "serviceAccount:${google_service_account.run_runtime_sa.email}"
     }
     ingress_settings = "ALLOW_INTERNAL_ONLY"
     all_traffic_on_latest_revision = true
-    service_account_email = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
+    service_account_email = "${google_service_account.run_runtime_sa.email}"
   }
   
   
@@ -161,7 +165,7 @@ resource "google_project_iam_member" "build_sa_permissions" {
 
 # Pub/Sub Service Account for invoking Cloud Run:
 resource "google_service_account" "pubsub_invoker_sa" {
-  account_id   = "pubsub-run-invoker-sa"
+  account_id   = "pubsub-run-invoker-sa-${random_id.sa_suffix.hex}"
   display_name = "PubSub to Run Invoker SA"
 }
 
