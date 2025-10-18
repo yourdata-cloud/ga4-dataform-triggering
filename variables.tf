@@ -27,12 +27,10 @@ variable "env_var_3" {
   type        = string
   description = "Dataform repo name"
   sensitive   = false
-  default = "main"
 }
 
 variable "env_var_4" {
   type        = string
   description = "Dataform workspace name"
   sensitive   = false
-  default = "main"
 }
