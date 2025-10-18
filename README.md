@@ -76,8 +76,9 @@ terraform destroy \
    -var="env_var_3=<your-dataform-repository>"
    -var="env_var_4=<your-dataform-workspace>"
 ```
+** Nothing will happen to your Dataform model, 'terraform destroy' just removes the pipeline **
 
-Alternatively, you can hardcode your variables values into the **terraform.tfvars file**, included in the project (but commented).
+You can also hardcode the same terraform variables into **terraform.tfvars**, which is included in this project (but fully commented and inactive).
 
 The GCS bucket, and the ZIP file included, will stay after the deployment. This is an expected backup of the Cloud Run Function source code.
 
