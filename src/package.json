@@ -1,11 +1,8 @@
 {
   "name": "ga4_dataform_triggering",
   "version": "1.0.0",
-  "author": "YourData.Cloud UG (haftungsbeschränkt) - yourdata.cloud",
   "dependencies": {
     "@google-cloud/functions-framework": "*",
-    "@google-cloud/pubsub": "*",
-    "@google-cloud/bigquery-data-transfer": "*",
     "@google-cloud/dataform": "*"
   }
 }
