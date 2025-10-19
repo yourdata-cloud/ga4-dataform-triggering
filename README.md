@@ -1,8 +1,6 @@
-![YourData.Cloud logo](https://img1.wsimg.com/isteam/ip/ad90bb28-f910-4fa3-9922-8f22021ce2f5/YourData%20simple%20logo%20white.png/:/rs=h:175,m)
-
 # GA4 Dataform Triggering
 
-This is a complete **Terraform configuration** to deploy an **event-driven logging pipeline** on Google Cloud, **based on the GA4 raw data export to BigQuery**, and aimed to run your **Dataform worflow** involved with that.
+This is a free **Terraform configuration** to deploy an **event-driven logging pipeline** on Google Cloud, **based on the GA4 raw data export to BigQuery**, and aimed to run your **Dataform worflow** involved with that.
 This utility creates everything you need to programmatically run your Dataform model on every daily GA4 raw data update.
 
 It automatically deploys a Node.js **Cloud Run Function** triggered by a **Pub/Sub** topic. This topic is fed by a **Logging Sink** that filters your project's logs based on the GA4 export.\
@@ -31,8 +29,7 @@ Terraform will enable all the required GCP APIs and it will deploy the following
 ## Prerequisites (GCP native)
 
 1.   Before you begin, ensure you have a Google Cloud project with billing enabled.
-2.   A Dataform workflow based on Google Analytics (GA4) raw data, that you want to automatically run everytime GA4 updates data in BigQuery.\
-     **Don't have any ?** Contact us (**support@your-data.cloud**) for your customized Dataform model (ecommerce, machine learning, multi-attribution and [more](https://www.linkedin.com/posts/riccardomalesani_dataform-googleanalytics-googlecloud-activity-7377315965845360640-x0iy)).
+2.   A Dataform workflow based on Google Analytics (GA4) raw data, that you want to automatically run everytime GA4 updates data in BigQuery.
 
 ---
 
@@ -81,5 +78,3 @@ terraform destroy \
 You can also hardcode the same terraform variables into **terraform.tfvars**, which is included in this project (but fully commented and inactive).
 
 The GCS bucket, and the ZIP file included, will stay after the deployment. This is an expected backup of the Cloud Run Function source code.
-
-Thank you, and don't hesitate to contact us in case of need -> **support@your-data.cloud**
