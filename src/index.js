@@ -2,7 +2,8 @@ const {DataformClient} = require('@google-cloud/dataform').v1;
 const dataformClient = new DataformClient();
 
 exports.runDataform = async (event) => {
-  
+
+  //The env variables are to be defined by terraform apply or terraform.tfvars
   const projectId = process.env.PROJECT;
   const parent = 'projects/'+projectId+'/locations/'+process.env.LOCATION+'/repositories/'+process.env.REPO;
   const workspaceId = parent + '/workspaces/'+process.env.WORKSPACE;
@@ -24,6 +25,7 @@ exports.runDataform = async (event) => {
     name: "dataform_ga4_compil_" + Date_Format(today) + "_" + destinationTableId.replace('events_', ''),
     codeCompilationConfig: {
       "vars": {
+          //Exporting the updated GA4 raw data "table_date" info, that can be used in Dataform
           "GA4_TABLE": destinationTableId
         }
     },
@@ -34,7 +36,6 @@ exports.runDataform = async (event) => {
       parent,
       compilationResult
   };
-  // Run request (createCompilationResult)
   const response = await dataformClient.createCompilationResult(request)
   
   const request2 = {
@@ -42,6 +43,7 @@ exports.runDataform = async (event) => {
       workflowInvocation: {
         name: "dataform_ga4_invoke_" + Date_Format(today) + "_" + destinationTableId.replace('events_', ''),
         invocationConfig: {
+          //includedTags: ["tag1","tag2"],
           fullyRefreshIncrementalTablesEnabled: false,
           transitiveDependenciesIncluded: true,
           transitiveDependentsIncluded: false
@@ -50,7 +52,6 @@ exports.runDataform = async (event) => {
       }
   };
 
-  // Run request2 (createWorkflowInvocation)
   const response2 = await dataformClient.createWorkflowInvocation(request2)
   return response2;
 
