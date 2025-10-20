@@ -138,6 +138,15 @@ resource "google_cloudfunctions2_function" "default" {
     all_traffic_on_latest_revision = true
     service_account_email = "${google_service_account.run_runtime_sa.email}"
   }
+
+  event_trigger {
+    trigger_region = var.region
+    event_type     = "google.cloud.pubsub.topic.v1.messagePublished"
+
+    pubsub_topic   = google_pubsub_topic.log_topic.id 
+
+    retry_policy   = "RETRY_POLICY_RETRY" 
+  }
   
   
   depends_on = [
@@ -163,36 +172,4 @@ resource "google_project_iam_member" "build_sa_permissions" {
   project = var.project_id
   role    = each.key
   member  = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
-}
-
-# Pub/Sub Service Account for invoking Cloud Run:
-resource "google_service_account" "pubsub_invoker_sa" {
-  account_id   = "pubsub-run-invoker-sa-${random_id.sa_suffix.hex}"
-  display_name = "PubSub to Run Invoker SA"
-}
-
-# SA permissions:
-resource "google_cloud_run_service_iam_member" "pubsub_invoker_permission" {
-  service  = google_cloudfunctions2_function.default.name
-  location = google_cloudfunctions2_function.default.location
-  role     = "roles/run.invoker"
-  member   = "serviceAccount:${google_service_account.pubsub_invoker_sa.email}"
-}
-
-# Push subscription:
-resource "google_pubsub_subscription" "log_subscription" {
-  name  = "ga4-dataform-run"
-  topic = google_pubsub_topic.log_topic.name
-
-  push_config {
-    push_endpoint = google_cloudfunctions2_function.default.url
-
-    oidc_token {
-      service_account_email = google_service_account.pubsub_invoker_sa.email
-    }
-  }
-
-  ack_deadline_seconds = 60
-  
-  depends_on = [google_cloudfunctions2_function.default]
 }
