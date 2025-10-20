@@ -24,6 +24,7 @@ Terraform will enable all the required GCP APIs and it will deploy the following
     * A runtime SA for the Cloud Function.
     * Permissions for the Logging Sink to publish to the topic.
     * Permissions for Cloud Build to deploy the function.
+    * Permissions as Dataform Editor for the SA
 
 ## Prerequisites (GCP native)
 
@@ -47,6 +48,12 @@ cd ga4-dataform-triggering
 
 ```
 terraform init
+```
+
+If you want to upgrade your terraform, you can run instead:
+
+```
+terraform init -upgrade
 ```
 
 ### Apply Terraform with your variables
