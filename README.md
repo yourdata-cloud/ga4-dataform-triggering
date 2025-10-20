@@ -19,10 +19,9 @@ Terraform will enable all the required GCP APIs and it will deploy the following
     * It runs Dataform API v1
     * It compiles your Dataform workflow incrementally (in case you use incremental tables) with dependencies active. If you need tags, for now you can uncomment the compilation parameter in src/index.js.
     * It dynamically makes the "table_date" raw format of GA4 data (like "events_20251014") available as Dataform variable ("GA4_TABLE"), that you can reference for incremental logic in Dataform.
-5.  **Pub/Sub Subscription**: A push subscription that connects the topic to the Cloud Function, triggering it on every new log message about GA4 data daily updates.
-6.  **IAM & Service Accounts**: All necessary service accounts and IAM permissions are created and managed:
+    * The function is triggered by an EventArc event automatically subscribed to the created Pub/Sub topic (with every new log message about GA4 data daily updates).
+5.  **IAM & Service Accounts**: All necessary service accounts and IAM permissions are created and managed:
     * A runtime SA for the Cloud Function.
-    * An invoker SA for the Pub/Sub subscription.
     * Permissions for the Logging Sink to publish to the topic.
     * Permissions for Cloud Build to deploy the function.
 
