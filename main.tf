@@ -108,13 +108,7 @@ resource "google_cloudfunctions2_function" "default" {
 
   build_config {
     runtime = "nodejs22"
-    entry_point = "runDataform" 
-    environment_variables = {
-        PROJECT = var.project_id
-        LOCATION = var.env_var_2
-        REPO = var.env_var_3
-        WORKSPACE = var.env_var_4
-    }
+    entry_point = "runDataform"
     source {
       storage_source {
         bucket = google_storage_bucket.source_bucket.name
@@ -130,10 +124,12 @@ resource "google_cloudfunctions2_function" "default" {
     timeout_seconds     = 540
     max_instance_request_concurrency = 1
     available_cpu = "333m"
-    # environment_variables = {
-    #    SERVICE_CONFIG_TEST      = "config_test"
-    #    SERVICE_CONFIG_DIFF_TEST = "serviceAccount:${google_service_account.run_runtime_sa.email}"
-    # }
+    environment_variables = {
+        PROJECT = var.project_id
+        LOCATION = var.env_var_2
+        REPO = var.env_var_3
+        WORKSPACE = var.env_var_4
+    }
     ingress_settings = "ALLOW_INTERNAL_ONLY"
     all_traffic_on_latest_revision = true
     service_account_email = "${google_service_account.run_runtime_sa.email}"
