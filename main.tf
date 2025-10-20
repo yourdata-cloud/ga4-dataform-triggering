@@ -16,6 +16,12 @@ provider "google" {
   region  = var.region
 }
 
+provider "google-beta" {
+  alias   = google-beta # Questo è l'alias
+  project = var.project_id
+  region  = var.region
+}
+
 resource "random_id" "sa_suffix" {
   byte_length = 4
 }
@@ -26,6 +32,7 @@ resource "google_project_service" "apis" {
     "cloudresourcemanager.googleapis.com",
     "iamcredentials.googleapis.com",
     "cloudfunctions.googleapis.com",
+    "dataform.googleapis.com",
     "artifactregistry.googleapis.com", 
     "eventarc.googleapis.com",
     "run.googleapis.com",
@@ -168,4 +175,18 @@ resource "google_project_iam_member" "build_sa_permissions" {
   project = var.project_id
   role    = each.key
   member  = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
+}
+
+resource "google_dataform_repository_iam_member" "dataform_invoker" {
+  provider = google-beta
+  project    = var.project_id
+  region     = var.env_var_2
+  repository = var.env_var_3  
+  role       = "roles/dataform.invoker"
+  member     = "serviceAccount:${google_service_account.run_runtime_sa.email}"
+  
+  depends_on = [
+    google_service_account.run_runtime_sa,
+    google_project_service.apis["dataform.googleapis.com"]
+  ]
 }
