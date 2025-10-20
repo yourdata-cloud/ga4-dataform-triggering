@@ -2,7 +2,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 5.0"
+      version = ">= 5.10.0"
     }
     archive = {
       source  = "hashicorp/archive"
@@ -172,7 +172,6 @@ resource "google_project_iam_member" "build_sa_permissions" {
 }
 
 resource "google_dataform_repository_iam_member" "dataform_invoker" {
-  provider   = google
   project    = var.project_id
   region     = var.env_var_2
   repository = var.env_var_3  
