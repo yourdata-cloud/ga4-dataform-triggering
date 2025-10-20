@@ -16,12 +16,6 @@ provider "google" {
   region  = var.region
 }
 
-provider "google-beta" {
-  alias   = google-beta # Questo è l'alias
-  project = var.project_id
-  region  = var.region
-}
-
 resource "random_id" "sa_suffix" {
   byte_length = 4
 }
@@ -178,7 +172,7 @@ resource "google_project_iam_member" "build_sa_permissions" {
 }
 
 resource "google_dataform_repository_iam_member" "dataform_invoker" {
-  provider = google-beta
+  provider   = google
   project    = var.project_id
   region     = var.env_var_2
   repository = var.env_var_3  
