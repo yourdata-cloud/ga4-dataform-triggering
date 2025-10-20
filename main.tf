@@ -2,7 +2,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = ">= 5.10.0"
+      version = "~> 5.0"
     }
     archive = {
       source  = "hashicorp/archive"
@@ -159,6 +159,17 @@ data "google_project" "project" {
   ]
 }
 
+resource "google_project_iam_member" "dataform_editor_permission" {
+  project = var.project_id
+  role    = "roles/dataform.editor"
+  member  = "serviceAccount:${google_service_account.run_runtime_sa.email}"
+  
+  depends_on = [
+    google_project_service.apis["dataform.googleapis.com"],
+    google_service_account.run_runtime_sa
+  ]
+}
+
 resource "google_project_iam_member" "build_sa_permissions" {
   for_each = toset([
     "roles/storage.objectViewer",
@@ -169,17 +180,4 @@ resource "google_project_iam_member" "build_sa_permissions" {
   project = var.project_id
   role    = each.key
   member  = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
-}
-
-resource "google_dataform_repository_iam_member" "dataform_invoker" {
-  project    = var.project_id
-  region     = var.env_var_2
-  repository = var.env_var_3  
-  role       = "roles/dataform.invoker"
-  member     = "serviceAccount:${google_service_account.run_runtime_sa.email}"
-  
-  depends_on = [
-    google_service_account.run_runtime_sa,
-    google_project_service.apis["dataform.googleapis.com"]
-  ]
 }
