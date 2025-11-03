@@ -1,5 +1,9 @@
 terraform {
   required_providers {
+    time = {
+      source  = "hashicorp/time"
+      version = "~> 0.9"
+    }
     google = {
       source  = "hashicorp/google"
       version = "~> 5.0"
@@ -23,6 +27,7 @@ resource "random_id" "sa_suffix" {
 # Enable required services API:
 resource "google_project_service" "apis" {
   for_each = toset([
+    "iam.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "iamcredentials.googleapis.com",
     "cloudfunctions.googleapis.com",
@@ -33,8 +38,7 @@ resource "google_project_service" "apis" {
     "pubsub.googleapis.com",
     "logging.googleapis.com",
     "storage.googleapis.com",
-    "cloudbuild.googleapis.com",
-    "iam.googleapis.com"
+    "cloudbuild.googleapis.com"
   ])
   service            = each.key
   disable_on_destroy = false
@@ -87,11 +91,24 @@ resource "google_logging_project_sink" "log_sink" {
   depends_on = [google_project_service.apis]
 }
 
+# Time to wait:
+resource "time_sleep" "wait_for_sink_identity" {
+  triggers = {
+    sink_id = google_logging_project_sink.log_sink.id
+  }
+
+  create_duration = "30s"
+}
+
 # Authorize the sink to publish:
 resource "google_pubsub_topic_iam_member" "logging_publisher" {
   topic  = google_pubsub_topic.log_topic.name
   role   = "roles/pubsub.publisher"
   member = google_logging_project_sink.log_sink.writer_identity
+
+  depends_on = [
+    time_sleep.wait_for_sink_identity
+  ]
 }
 
 # CLOUD RUN SERVICE
@@ -100,6 +117,10 @@ resource "google_pubsub_topic_iam_member" "logging_publisher" {
 resource "google_service_account" "run_runtime_sa" {
   account_id   = "ga4-dataform-run-sa-${random_id.sa_suffix.hex}"
   display_name = "GA4 Dataform Run SA"
+
+  depends_on = [
+    google_project_service.apis["iam.googleapis.com"]
+  ]
 }
 
 # Cloud Run Function (v2):
