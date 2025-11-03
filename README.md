@@ -81,6 +81,19 @@ terraform destroy \
 ```
 ** Nothing will happen to your Dataform model, 'terraform destroy' just removes the pipeline **
 
+### Running the same Terraform configuration to another GCP project under the same user account
+
+You don't need to clone this repo again, just **create another terraform workspace** before terraform init and apply.
+
+```
+terraform workspace new <your-project-id>
+
+terraform init
+terraform apply \
+   -var.... #see above
+   ...................
+```
+
 You can also hardcode the same terraform variables into **terraform.tfvars**, which is included in this project (but fully commented and inactive).
 
 The GCS bucket, and the ZIP file included, will stay after the deployment. This is an expected backup of the Cloud Run Function source code.
