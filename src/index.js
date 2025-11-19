@@ -1,7 +1,7 @@
 const {DataformClient} = require('@google-cloud/dataform').v1;
 const dataformClient = new DataformClient();
 
-exports.runDataform = async (event) => {
+exports.runDataform = async (event,res) => {
 
   //The env variables are to be defined by terraform apply or terraform.tfvars
   const projectId = process.env.PROJECT;
@@ -53,6 +53,7 @@ exports.runDataform = async (event) => {
   };
 
   const response2 = await dataformClient.createWorkflowInvocation(request2)
+  res.status(200).send("dataform_ga4_invoke_" + Date_Format(today) + " DONE");
   return response2;
 
 };
